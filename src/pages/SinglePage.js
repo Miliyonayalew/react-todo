@@ -7,13 +7,13 @@ const SinglePage = () => {
       slug: 'about-app',
       title: 'About the App',
       description:
-        'In this app, you can add, delete, submit and edit items. To edit items, simply double click on edit. Once you are done, press the enter key to resubmit. This app will persist your data in the browser local storage. So whether you reload, close your app or reopened it, you still have access to your to-dos items.',
+        'In this app, you can add, delete, submit and edit items. To edit items, simply click on edit. Once you are done, press the enter key to resubmit. This app will persist your data in the browser local storage. So whether you reload, close your app or reopened it, you still have access to your to-dos items.',
     },
     {
       slug: 'about-author',
       title: 'About the Author',
       description:
-        'This app was developed by Ibas Majid and implemented by Miliyon Ayalew, a self-taught web developer. He is opened to freelance Gig. So if you have a project that you would like to get started or think you need my help with something, then get in touch.',
+        'This app was developed by Ibas Majid and implemented by Miliyon Ayalew, a enthusiastic Full-Stack web developer. So if you have a project that you would like to get started or think you need my help with something, then get in touch. Github @Miliyonayalew ',
     },
   ];
 
@@ -22,7 +22,7 @@ const SinglePage = () => {
   const { title, description } = aboutContent;
 
   return (
-    <div>
+    <div className="main__content">
       <h1>{title}</h1>
       <p>{description}</p>
     </div>
