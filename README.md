@@ -1,7 +1,7 @@
 ![](https://img.shields.io/badge/Microverse-blueviolet)
 
 # React-Todo
-
+A React based Todo-App based on the ReactJS [tutorial](https://ibaslogic.com/react-tutorial-for-beginners/)
 
 ## Built With
 - React
