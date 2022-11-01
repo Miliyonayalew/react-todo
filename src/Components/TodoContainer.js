@@ -1,106 +1,92 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { Route, Routes } from 'react-router-dom';
 import TodoList from './TodoList';
 import Header from './Header';
 import InputTodo from './InputTodo';
+import About from '../pages/About';
+import NotMatch from '../pages/NotMatch';
+import Navbar from './Navbar';
 
-class TodoContainer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      todos: [],
-    };
-  }
-
-  /*   componentDidMount() {
-    fetch('https://jsonplaceholder.typicode.com/todos?_limit=10')
-      .then((response) => response.json())
-      .then((data) => this.setState({ todos: data }));
-  }
- */
-
-  componentDidMount() {
+const TodoContainer = () => {
+  function getInitialTodos() {
     const temp = localStorage.getItem('todos');
-    const loadedTodos = JSON.parse(temp);
-    if (loadedTodos) {
-      this.setState({
-        todos: loadedTodos,
-      });
-    }
+    const savedTodos = JSON.parse(temp);
+    return savedTodos || [];
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { todos } = this.state;
-    if (prevState.todos !== todos) {
-      const temp = JSON.stringify(todos);
-      localStorage.setItem('todos', temp);
-    }
-  }
+  const [todos, setTodos] = useState(getInitialTodos());
 
-  handleChange = (id) => {
-    this.setState((prevState) => ({
-      todos: prevState.todos.map((todo) => {
-        if (todo.id === id) {
-          return {
-            ...todo,
-            completed: !todo.completed,
-          };
-        }
-        return todo;
-      }),
+  useEffect(() => {
+    // storing items
+    const temp = JSON.stringify(todos);
+    localStorage.setItem('todos', temp);
+  }, [todos]);
+
+  const handleChange = (id) => {
+    setTodos((prevState) => prevState.map((todo) => {
+      if (todo.id === id) {
+        return {
+          ...todo,
+          completed: !todo.completed,
+        };
+      }
+      return todo;
     }));
   };
 
-  delTodo = (id) => {
-    const { todos } = this.state;
-    this.setState({
-      todos: [...todos.filter((todo) => todo.id !== id)],
-    });
+  const delTodo = (id) => {
+    setTodos([...todos.filter((todo) => todo.id !== id)]);
   };
 
-  addTodoItem = (title) => {
-    const { todos } = this.state;
+  const addTodoItem = (title) => {
     const newTodo = {
       id: uuidv4(),
       title,
       completed: false,
     };
-    this.setState({
-      todos: [...todos, newTodo],
-    });
-  }
+    setTodos([...todos, newTodo]);
+  };
 
-  handleUpdate = (updatedTitle, id) => {
-    this.setState((prevState) => ({
-      todos: prevState.todos.map((todo) => {
-        if (todo.id === id) {
-          return {
-            ...todo,
-            title: updatedTitle,
-          };
-        }
-        return todo;
-      }),
+  const handleUpdate = (updatedTitle, id) => {
+    setTodos((prevState) => prevState.map((todo) => {
+      if (todo.id === id) {
+        return {
+          ...todo,
+          title: updatedTitle,
+        };
+      }
+      return todo;
     }));
   };
 
-  render() {
-    const { todos } = this.state;
-    return (
-      <div className="container">
-        <div className="inner">
-          <Header />
-          <InputTodo addTodoItem={this.addTodoItem} />
-          <TodoList
-            todos={todos}
-            handleChange={this.handleChange}
-            delTodo={this.delTodo}
-            handleUpdate={this.handleUpdate}
-          />
-        </div>
-      </div>
-    );
-  }
-}
+  return (
+    <>
+      <Navbar />
+      <Routes>
+        <Route
+          exact
+          path="/"
+          element={(
+            <div className="container">
+              <div className="inner">
+                <Header />
+                <InputTodo addTodoItem={addTodoItem} />
+                <TodoList
+                  todos={todos}
+                  handleChange={handleChange}
+                  delTodo={delTodo}
+                  handleUpdate={handleUpdate}
+                />
+              </div>
+            </div>
+          )}
+        />
+        <Route path="/about" element={<About />} />
+        <Route path="*" element={<NotMatch />} />
+      </Routes>
+    </>
+  );
+};
 
 export default TodoContainer;
